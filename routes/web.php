@@ -14,3 +14,13 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/test', function () {
+    $test = request('test');
+
+    return view('test', [
+        'test' => $test
+    ]);
+});
+
+Route::get('/posts/{post}', 'postsController@show');
