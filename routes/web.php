@@ -23,4 +23,9 @@ Route::get('/test', function () {
     ]);
 });
 
-Route::get('/posts/{post}', 'postsController@show');
+Route::get('/posts/create', 'postsController@create');
+Route::get('/posts/{slug}', 'postsController@show');
+Route::post('/posts', 'postsController@store');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
