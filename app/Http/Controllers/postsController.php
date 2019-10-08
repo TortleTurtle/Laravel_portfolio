@@ -44,7 +44,7 @@ class postsController extends Controller
 
         $post->save();
 
-        return redirect('/');
+        return redirect('/posts/'. $post->slug);
     }
 
     /**
@@ -57,7 +57,7 @@ class postsController extends Controller
     {
         $post = Post::where('slug', $slug)->firstOrFail();
 
-        return view('post', [
+        return view('posts.post', [
             'post' => $post
         ]);
     }
@@ -68,9 +68,12 @@ class postsController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+    public function edit($slug)
     {
-        //
+        //find the post with the right slug.
+        $post = Post::where('slug', $slug)->firstOrFail();
+
+        return view('posts.editPost', compact('post'));
     }
 
     /**
@@ -80,9 +83,18 @@ class postsController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, $id)
     {
-        //
+        $post = Post::find($id);
+        $post->slug = $request->slug;
+        $post->title = $request->title;
+        $post->content = $request->content;
+        $post->active = true;
+        $post->author = 1;
+
+        $post->save();
+
+        return redirect('/posts/' . $post->slug);
     }
 
     /**

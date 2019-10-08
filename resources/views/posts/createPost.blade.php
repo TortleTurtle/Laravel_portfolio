@@ -11,5 +11,5 @@
         <label for="content">Content:</label>
         <input name="content" type="text">
         <input type="submit" value="Submit">
-    </form>    
+    </form>
 @endsection
