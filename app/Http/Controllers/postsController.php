@@ -24,7 +24,7 @@ class postsController extends Controller
      */
     public function create()
     {
-        return view('createPost');
+        return view('posts.createPost');
     }
 
     /**
@@ -35,6 +35,14 @@ class postsController extends Controller
      */
     public function store(Request $request)
     {
+        //validation
+        $request->validate([
+            "slug" => 'required|max:30|unique:posts|alpha_dash',
+            "title" => 'required|max:30',
+            "content" => 'required'
+        ]);
+
+        //storing
         $post = new Post();
         $post->slug = $request->slug;
         $post->title = $request->title;
@@ -43,7 +51,8 @@ class postsController extends Controller
         $post->author = 1;
 
         $post->save();
-
+        
+        //redirect to the created post's page.
         return redirect('/posts/'. $post->slug);
     }
 
@@ -85,6 +94,14 @@ class postsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //validation
+        $request->validate([
+            "slug" => 'required|max:30|unique:posts|alpha_dash',
+            "title" => 'required|max:30',
+            "content" => 'required'
+        ]);
+        
+        //updating
         $post = Post::find($id);
         $post->slug = $request->slug;
         $post->title = $request->title;
@@ -93,7 +110,8 @@ class postsController extends Controller
         $post->author = 1;
 
         $post->save();
-
+        
+        //redirect to updated post's page
         return redirect('/posts/' . $post->slug);
     }
 
