@@ -23,7 +23,7 @@ Route::get('/test', function () {
     ]);
 });
 
-Route::get('/posts/create', 'postsController@create');
+Route::get('/posts/create', 'postsController@create')->middleware('auth');
 Route::get('/posts/{slug}', 'postsController@show');
 Route::get('/posts/{slug}/edit', 'postsController@edit');
 Route::put('/posts/{id}', 'postsController@update');
