@@ -18,11 +18,11 @@ class CreatePostsTable extends Migration
             $table->string('slug');
             $table->string('title');
             $table->longText('content');
-            $table->dateTime('updated_at');
-            $table->dateTime('created_at');
             $table->boolean('active');
             $table->unsignedBigInteger('author');
             $table->foreign('author')->references('id')->on('users');
+            $table->dateTime('updated_at');
+            $table->dateTime('created_at');
         });
     }
 
