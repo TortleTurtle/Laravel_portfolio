@@ -23,11 +23,12 @@ Route::get('/test', function () {
     ]);
 });
 
+Route::get('/posts', 'postsController@index');
 Route::get('/posts/create', 'postsController@create')->middleware('auth');
 Route::get('/posts/{slug}', 'postsController@show');
 Route::get('/posts/{slug}/edit', 'postsController@edit')->middleware('auth');
-Route::put('/posts/{id}', 'postsController@update');
-Route::post('/posts', 'postsController@store');
+Route::put('/posts/{id}', 'postsController@update')->middleware('auth');
+Route::post('/posts', 'postsController@store')->middleware('auth');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

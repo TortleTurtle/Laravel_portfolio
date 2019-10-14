@@ -15,7 +15,12 @@ class postsController extends Controller
      */
     public function index()
     {
-        //
+        //show all posts
+        $posts = Post::all();
+
+        return view('posts.indexPosts',[
+            'posts' => $posts
+        ]);
     }
 
     /**
@@ -43,25 +48,34 @@ class postsController extends Controller
      */
     public function store(Request $request)
     {
-        //validation
-        $request->validate([
-            "slug" => 'required|max:30|unique:posts|alpha_dash',
-            "title" => 'required|max:30',
-            "content" => 'required'
-        ]);
+        $user = Auth::user();
+        //check if user has the right role.
+        if ($user->role_id == 1) {
+            //validation
+            $request->validate([
+                "slug" => 'required|max:30|unique:posts|alpha_dash',
+                "title" => 'required|max:30',
+                "content" => 'required'
+            ]);
 
-        //storing
-        $post = new Post();
-        $post->slug = $request->slug;
-        $post->title = $request->title;
-        $post->content = $request->content;
-        $post->active = true;
-        $post->author = 1;
+            //storing
+            $post = new Post();
+            $post->slug = $request->slug;
+            $post->title = $request->title;
+            $post->content = $request->content;
+            $post->active = true;
+            $post->author = 1;
 
-        $post->save();
+            $post->save();
+            
+            //redirect to the created post's page.
+            return redirect('/posts/'. $post->slug);
+            
+        }
+        else {
+            abort(403, "You don't have the right permissions");
+        }
         
-        //redirect to the created post's page.
-        return redirect('/posts/'. $post->slug);
     }
 
     /**
@@ -88,7 +102,7 @@ class postsController extends Controller
     public function edit($slug)
     {
         $user = Auth::user();
-
+        //check if user has the right role
         if ($user->role_id == 1) {
             //find the post with the right slug.
              $post = Post::where('slug', $slug)->firstOrFail();
@@ -110,25 +124,32 @@ class postsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //validation
-        $request->validate([
-            "slug" => 'required|max:30|unique:posts|alpha_dash',
-            "title" => 'required|max:30',
-            "content" => 'required'
-        ]);
-        
-        //updating
-        $post = Post::find($id);
-        $post->slug = $request->slug;
-        $post->title = $request->title;
-        $post->content = $request->content;
-        $post->active = true;
-        $post->author = 1;
+        $user = Auth::user();
+        //check if user has the right role
+        if ($user->role_id == 1) {
+            //validation
+            $request->validate([
+                "slug" => 'required|max:30|unique:posts|alpha_dash',
+                "title" => 'required|max:30',
+                "content" => 'required'
+            ]);
+            
+            //updating
+            $post = Post::find($id);
+            $post->slug = $request->slug;
+            $post->title = $request->title;
+            $post->content = $request->content;
+            $post->active = true;
+            $post->author = 1;
 
-        $post->save();
-        
-        //redirect to updated post's page
-        return redirect('/posts/' . $post->slug);
+            $post->save();
+            
+            //redirect to updated post's page
+            return redirect('/posts/' . $post->slug);
+        }
+        else {
+            abort(403, "You don't have the right permissions");
+        }
     }
 
     /**
@@ -137,8 +158,18 @@ class postsController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy($slug)
     {
-        //
+        $user = Auth::user();
+        //check if user has the right role
+        if ($user->role_id == 1) {
+            //find the post with the right slug.
+             $post = Post::where('slug', $slug)->firstOrFail();
+             $post->delete();
+            return view('posts.indexPosts');
+        }
+        else {
+            abort(403, "You don't have the right permissions");
+        }
     }
 }
