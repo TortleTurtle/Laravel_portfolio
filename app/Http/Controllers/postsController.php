@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class postsController extends Controller
 {
@@ -24,7 +25,14 @@ class postsController extends Controller
      */
     public function create()
     {
-        return view('posts.createPost');
+        $user = Auth::user();
+        //check if user has the right role.
+        if ($user->role_id == 1) {
+            return view('posts.createPost');
+        }
+        else {
+            abort(403, "You don't have the right permissions");
+        }
     }
 
     /**
@@ -79,10 +87,18 @@ class postsController extends Controller
      */
     public function edit($slug)
     {
-        //find the post with the right slug.
-        $post = Post::where('slug', $slug)->firstOrFail();
+        $user = Auth::user();
 
-        return view('posts.editPost', compact('post'));
+        if ($user->role_id == 1) {
+            //find the post with the right slug.
+             $post = Post::where('slug', $slug)->firstOrFail();
+
+            return view('posts.editPost', compact('post'));
+        }
+        else {
+            abort(403, "You don't have the right permissions");
+        }
+        
     }
 
     /**
