@@ -41,6 +41,13 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings',
         ],
+        //send permissions to controller
+        'permissions' => [
+            //first check if user is logged in.
+            \App\Http\Middleware\Authenticate::class,
+            //then get the permission of that user.
+            \App\Http\Middleware\GetPermissions::class,
+        ]
     ];
 
     /**

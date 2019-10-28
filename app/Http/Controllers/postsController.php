@@ -28,11 +28,10 @@ class postsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $user = Auth::user();
-        //check if user has the right role.
-        if ($user->role_id == 1) {
+        //check if user has the right permission.
+        if (in_array('createPost', $request->get('permissions'))) {
             return view('posts.createPost');
         }
         else {
@@ -48,9 +47,8 @@ class postsController extends Controller
      */
     public function store(Request $request)
     {
-        $user = Auth::user();
-        //check if user has the right role.
-        if ($user->role_id == 1) {
+        //check if user has the right permission.
+        if (in_array('createPost', $request->get('permissions'))) {
             //validation
             $request->validate([
                 "slug" => 'required|max:30|unique:posts|alpha_dash',
@@ -75,7 +73,6 @@ class postsController extends Controller
         else {
             abort(403, "You don't have the right permissions");
         }
-        
     }
 
     /**
@@ -99,11 +96,10 @@ class postsController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit($slug)
+    public function edit(Request $request, $slug)
     {
-        $user = Auth::user();
-        //check if user has the right role
-        if ($user->role_id == 1) {
+        //check if user has the right permission.
+        if (in_array('editPost', $request->get('permissions'))) {
             //find the post with the right slug.
              $post = Post::where('slug', $slug)->firstOrFail();
 
@@ -124,9 +120,8 @@ class postsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = Auth::user();
-        //check if user has the right role
-        if ($user->role_id == 1) {
+        //check if user has the right permission
+        if (in_array('editPost', $request->get('permissions'))) {
             //validation
             $request->validate([
                 "slug" => 'required|max:30|unique:posts|alpha_dash',
@@ -158,18 +153,21 @@ class postsController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy($slug)
+    public function destroy(Request $request, $slug)
     {
-        $user = Auth::user();
         //check if user has the right role
-        if ($user->role_id == 1) {
+        if (in_array('deletePost', $request->get('permissions'))) {
             //find the post with the right slug.
-             $post = Post::where('slug', $slug)->firstOrFail();
-             $post->delete();
+            $post = Post::where('slug', $slug)->firstOrFail();
+            $post->delete();
+            
             return view('posts.indexPosts');
         }
         else {
             abort(403, "You don't have the right permissions");
         }
+    }
+    public function checkPermissions(Request $request){
+        return $request->get('permissions');
     }
 }
