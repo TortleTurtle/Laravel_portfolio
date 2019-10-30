@@ -14,7 +14,7 @@ class GetPermissions
         // Get the permissions asociated with the user role.
         $user = Auth::user();
         $permissions = DB::table('roles_permissions')->join('permissions', 'roles_permissions.permission_id', '=', 'permissions.id')->select('permissions.name')->where('role_id', $user->role_id)->get()->toArray();
-        //make an array out of the object.
+        //
         $request->attributes->add(['permissions'=> array_map(function($permission){
             return $permission->name;
         }, $permissions)]);

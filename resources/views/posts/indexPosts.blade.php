@@ -8,8 +8,10 @@
     </thead>
     @foreach ($posts as $post)
         <tr>
-            <td>{{ $post->title}}</td>
+            <td><a href="/posts/{{$post->slug}}">{{ $post->title}}</a></td>
             <td>{{ $post->author}}</td>
+        </tr>
+    
     @endforeach
 <table>
 @endsection
