@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<table>
+<table class="table table-bordered">
     <thead>
         <th>Title</th>
         <th>author</th>

@@ -16,8 +16,8 @@ class postsController extends Controller
     public function index()
     {  
         //show all posts
-        $posts = Post::all();
-
+        $posts = Post::where('status', true)->orderBy('created_at', 'desc')->get();
+        
 
         return view('posts.indexPosts',[
             'posts' => $posts
@@ -102,6 +102,7 @@ class postsController extends Controller
     {
         $post = Post::where('slug', $slug)->firstOrFail();
 
+        
         return view('posts.post', [
             'post' => $post
         ]);
