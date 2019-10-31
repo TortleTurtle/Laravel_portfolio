@@ -30,8 +30,13 @@ Route::get('/posts/{slug}', 'postsController@show');
 Route::get('/posts/{slug}/edit', 'postsController@edit')->middleware('permissions');
 Route::put('/posts/{id}', 'postsController@update')->middleware('permissions');
 Route::post('/posts', 'postsController@store')->middleware('permissions');
+Route::delete('/posts/{slug}/delete', 'postsController@destroy')->middleware('permissions');
+Route::put('/posts/toggle/{slug}', 'postsController@togglestatus')->middleware('permissions');
 
-Route::get('/permissions', 'postsController@checkPermissions')->middleware('auth', 'permissions');
+//admin routes
+Route::get('/admin/posts', 'postsController@adminIndex')->middleware('auth');
+
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

@@ -18,7 +18,7 @@ class CreatePostsTable extends Migration
             $table->string('slug');
             $table->string('title');
             $table->longText('content');
-            $table->boolean('active');
+            $table->boolean('status');
             $table->unsignedBigInteger('author');
             $table->foreign('author')->references('id')->on('users');
             $table->dateTime('updated_at');

@@ -14,13 +14,30 @@ class postsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    {  
         //show all posts
         $posts = Post::all();
+
 
         return view('posts.indexPosts',[
             'posts' => $posts
         ]);
+    }
+
+    public function adminIndex()
+    {  
+        //check if user is a admin
+        if(Auth::user()->role_id == 1){
+            //show all posts
+            $posts = Post::all();
+    
+            return view('admin.indexPosts',[
+                'posts' => $posts
+            ]);
+        }
+        else{
+            return redirect()->action('postsController@index');
+        }
     }
 
     /**
@@ -35,7 +52,7 @@ class postsController extends Controller
             return view('posts.createPost');
         }
         else {
-            abort(403, "You don't have the right permissions");
+            abort(403, "You do not have the right permissions");
         }
     }
 
@@ -71,7 +88,7 @@ class postsController extends Controller
             
         }
         else {
-            abort(403, "You don't have the right permissions");
+            abort(403, "You do not have the right permissions");
         }
     }
 
@@ -106,7 +123,7 @@ class postsController extends Controller
             return view('posts.editPost', compact('post'));
         }
         else {
-            abort(403, "You don't have the right permissions");
+            abort(403, "You do not have the right permissions");
         }
         
     }
@@ -143,7 +160,29 @@ class postsController extends Controller
             return redirect('/posts/' . $post->slug);
         }
         else {
-            abort(403, "You don't have the right permissions");
+            abort(403, "You do not have the right permissions");
+        }
+    }
+
+    public function toggleStatus(Request $request, $slug){
+
+        if (in_array('editPost', $request->get('permissions'))) {
+
+            $post = Post::where('slug',$slug)->first();
+
+            if ($post->status == 0){
+                $post->status = 1;
+            }
+            else {
+                $post->status = 0;
+            }
+            $post->save();
+                
+            return redirect('/admin/posts');
+        }
+
+        else {
+            abort(403, "You do not have the right permissions");
         }
     }
 
@@ -166,8 +205,5 @@ class postsController extends Controller
         else {
             abort(403, "You don't have the right permissions");
         }
-    }
-    public function checkPermissions(Request $request){
-        return $request->get('permissions');
     }
 }
