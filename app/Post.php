@@ -10,9 +10,11 @@ class Post extends Model
     public $primaryKey = 'id';
     public $timestamps = true;
 
-    
+    protected $fillable = [
+        'title', 'slug', 'content', 'status', 'author',
+    ];
 
     public function user(){
-        return $this->belongsTo('App/User');
+        return $this->belongsTo('App\User');
     }
 }

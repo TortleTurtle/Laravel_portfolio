@@ -39,10 +39,10 @@ class User extends Authenticatable
 
     //relationships
     public function posts(){
-        return $this->hasMany('App/Post');
+        return $this->hasMany('App\Post', 'author');
     }
     public function role(){
-        return $this->hasOne('App/Role');
+        return $this->belongsTo('App\Role');
     }
     
 }
