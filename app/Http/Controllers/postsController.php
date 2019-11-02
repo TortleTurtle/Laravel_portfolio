@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use App\User;
+use App\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 
 class postsController extends Controller
 {
@@ -18,20 +20,38 @@ class postsController extends Controller
     {  
         //show all posts
         $posts = Post::where('status', true)->orderBy('created_at', 'desc')->get();
+        $categories = Category::all();
         
 
         return view('posts.indexPosts',[
             'posts' => $posts,
+            'categories' => $categories,
         ]);
     }
 
     public function search(Request $request){
         
         $search = $request->get('search');
-        $posts = Post::where('title', 'like', "%$search%")->get();
+        $category = $request->get('category');
+        $categories = Category::all();
+
+        if(empty($search)){
+            $posts = Post::whereHas('categories', function (Builder $query) use ($category){
+                $query->where('id', '=', $category);
+            })->get();
+        }
+        elseif(empty($category)){
+            $posts = Post::where('title', 'like', "%$search%")->get(); 
+        }
+        else{
+            $posts = Post::where('title', 'like', "%$search%")->whereHas('categories', function (Builder $query) use ($category){
+                $query->where('id', '=', $category);
+            })->get();
+        }
         
         return view('posts.indexPosts',[
             'posts' => $posts,
+            'categories' => $categories,
         ]);
     }
 

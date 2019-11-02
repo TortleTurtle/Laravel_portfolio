@@ -11,12 +11,12 @@
             <input type="text" name="search">
         </div>
         <div class="col">
-            <label for="catagory">Catagory</label>
-            <select name="catagory">
-                <option value="catagory1">Catagory1</option>
-                <option value="catagory2">Catagory2</option>
-                <option value="catagory3">Catagory3</option>
-                <option value="catagory4">Catagory4</option>
+            <label for="category">Category</label>
+            <select name="category">
+                <option value=''></option>
+                @foreach ($categories as $category)
+                    <option value="{{$category->id}}">{{$category->name}}</option>
+                @endforeach
             </select>
         </div>
         <div class="col">
