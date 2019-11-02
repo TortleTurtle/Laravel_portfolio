@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Post;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,7 +21,17 @@ class postsController extends Controller
         
 
         return view('posts.indexPosts',[
-            'posts' => $posts
+            'posts' => $posts,
+        ]);
+    }
+
+    public function search(Request $request){
+        
+        $search = $request->get('search');
+        $posts = Post::where('title', 'like', "%$search%")->get();
+        
+        return view('posts.indexPosts',[
+            'posts' => $posts,
         ]);
     }
 
@@ -78,8 +89,8 @@ class postsController extends Controller
             $post->slug = $request->slug;
             $post->title = $request->title;
             $post->content = $request->content;
-            $post->active = true;
-            $post->author = 1;
+            $post->status = true;
+            $post->author = Auth::user()->id;
 
             $post->save();
             

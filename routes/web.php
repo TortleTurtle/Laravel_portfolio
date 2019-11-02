@@ -25,6 +25,7 @@ Route::get('/test', function () {
 
 //post routes
 Route::get('/posts', 'postsController@index');
+Route::get('/posts/search', 'postsController@search');
 Route::get('/posts/create', 'postsController@create')->middleware('permissions');
 Route::get('/posts/{slug}', 'postsController@show');
 Route::get('/posts/{slug}/edit', 'postsController@edit')->middleware('permissions');
@@ -36,7 +37,7 @@ Route::put('/posts/toggle/{slug}', 'postsController@togglestatus')->middleware('
 //admin routes
 Route::get('/admin/posts', 'postsController@adminIndex')->middleware('auth');
 
-
+Route::get('/permissions', 'postsController@permissions');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
