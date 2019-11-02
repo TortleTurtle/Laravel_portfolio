@@ -36,15 +36,15 @@ class postsController extends Controller
         $categories = Category::all();
 
         if(empty($search)){
-            $posts = Post::whereHas('categories', function (Builder $query) use ($category){
+            $posts = Post::where('status', '=', true)->whereHas('categories', function (Builder $query) use ($category){
                 $query->where('id', '=', $category);
             })->get();
         }
         elseif(empty($category)){
-            $posts = Post::where('title', 'like', "%$search%")->get(); 
+            $posts = Post::where([['title', 'like', "%$search%"], ['status', '=', true]])->get(); 
         }
         else{
-            $posts = Post::where('title', 'like', "%$search%")->whereHas('categories', function (Builder $query) use ($category){
+            $posts = Post::where([['title', 'like', "%$search%"], ['status', '=', true]])->whereHas('categories', function (Builder $query) use ($category){
                 $query->where('id', '=', $category);
             })->get();
         }
