@@ -34,6 +34,13 @@ Route::post('/posts', 'postsController@store')->middleware('permissions');
 Route::delete('/posts/{slug}/delete', 'postsController@destroy')->middleware('permissions');
 Route::put('/posts/toggle/{slug}', 'postsController@togglestatus')->middleware('permissions');
 
+//user routes
+Route::get('/users', 'userController@index');
+Route::get('/users/{id}', 'userController@show');
+Route::get('/users/{id}/edit', 'userController@edit')->middleware('permissions');
+Route::put('/users/{id}', 'userController@update')->middleware('permissions');
+Route::delete('/users/{id}', 'userController@update')->middleware('permissions');
+
 //admin routes
 Route::get('/admin/posts', 'postsController@adminIndex')->middleware('auth');
 

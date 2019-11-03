@@ -160,8 +160,12 @@ class postsController extends Controller
         if (in_array('editPost', $request->get('permissions'))) {
             //find the post with the right slug.
              $post = Post::where('slug', $slug)->firstOrFail();
+             $categories = Category::all();
 
-            return view('posts.editPost', compact('post'));
+            return view('posts.editPost', [
+                'post' => $post,
+                'categories' => $categories
+            ]);
         }
         else {
             abort(403, "You do not have the right permissions");
