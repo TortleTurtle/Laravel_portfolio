@@ -36,6 +36,7 @@ Route::put('/posts/toggle/{slug}', 'postsController@togglestatus')->middleware('
 
 //user routes
 Route::get('/users', 'userController@index');
+Route::get('/users/search', 'userController@search');
 Route::get('/users/{id}', 'userController@show');
 Route::get('/users/{id}/edit', 'userController@edit')->middleware('permissions');
 Route::put('/users/{id}', 'userController@update')->middleware('permissions');

@@ -11,6 +11,26 @@
         </div>
     </div>
     <div class="row">
+            <form action="/users/search" method="GET">
+                <div class="col">
+                    <label for="search">Search:</label>
+                    <input type="text" name="search">
+                </div>
+                <div class="col">
+                    <label for="role">Role:</label>
+                    <select name="role">
+                        <option value=''></option>
+                        @foreach ($roles as $role)
+                            <option value="{{$role->id}}">{{$role->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col">
+                    <input type="submit" class="btn btn-primary" value="submit">
+                </div>
+            </form>
+        </div>
+    <div class="row">
         <table class="table table-bordered">
             <thead>
                 <th>username:</th>

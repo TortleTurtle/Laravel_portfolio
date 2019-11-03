@@ -12,13 +12,41 @@ class userController extends Controller
 {
     //index users
     public function index(){
-        //eagerloading role with the user.
+        //eager loading role with the user.
         $users = User::select('id', 'name', 'email', 'role_id')->with(['role' => function ($query){
             $query->select('id','name');
         }])->get();
+        $roles = Role::all();
 
         return view('user.userIndex',[
-            'users' => $users
+            'users' => $users,
+            'roles' => $roles
+        ]);
+    }
+    //search for users
+    public function search(Request $request){
+
+        $search = $request->get('search');
+        $role = $request->get('role');
+        $roles = Role::all();
+
+        if(empty($search)){
+            $users = User::whereHas('role', function (Builder $query) use ($role){
+                $query->where('id', '=', $role);
+            })->get();
+        }
+        elseif(empty($role)){
+            $users = User::where('name', 'like', "%$search%")->get();
+        }
+        else{
+            $users = User::where('title', 'like', "%$search%")->whereHas('role', function (Builder $query) use ($role){
+                $query->where('id', '=', $role);
+            })->get();
+        }
+        
+        return view('user.userIndex',[
+            'users' => $users,
+            'roles' => $roles,
         ]);
     }
 
