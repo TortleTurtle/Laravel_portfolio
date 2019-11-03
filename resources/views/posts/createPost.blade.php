@@ -22,6 +22,26 @@
         <div><input name="title" type="text"></div>
 
         <div>
+            <label for="category">Category</label>
+        </div>
+        <div>
+            <select name="category">
+                @foreach ($categories as $category)
+                    <option value="{{$category->id}}">{{$category->name}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label for="status">Category</label>
+        </div>
+        <div>
+            <select name="status">
+                <option value="0">Inactive</option>
+                <option value="1">Active</option>
+            </select>
+        </div>
+
+        <div>
             <label for="content">Content:</label>
             @if ($errors->has('content'))
                 <p>{{$errors->first('content')}}</p>

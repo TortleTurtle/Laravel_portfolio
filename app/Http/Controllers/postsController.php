@@ -41,7 +41,7 @@ class postsController extends Controller
             })->get();
         }
         elseif(empty($category)){
-            $posts = Post::where([['title', 'like', "%$search%"], ['status', '=', true]])->get(); 
+            $posts = Post::where([['title', 'like', "%$search%"], ['status', '=', true]])->get();
         }
         else{
             $posts = Post::where([['title', 'like', "%$search%"], ['status', '=', true]])->whereHas('categories', function (Builder $query) use ($category){
@@ -80,7 +80,10 @@ class postsController extends Controller
     {
         //check if user has the right permission.
         if (in_array('createPost', $request->get('permissions'))) {
-            return view('posts.createPost');
+            $categories = Category::all();
+            return view('posts.createPost',[
+                'categories' => $categories,
+            ]);
         }
         else {
             abort(403, "You do not have the right permissions");
@@ -109,10 +112,11 @@ class postsController extends Controller
             $post->slug = $request->slug;
             $post->title = $request->title;
             $post->content = $request->content;
-            $post->status = true;
+            $post->status = $request->status;
             $post->author = Auth::user()->id;
-
+            
             $post->save();
+            $post->categories()->attach($request->category);
             
             //redirect to the created post's page.
             return redirect('/posts/'. $post->slug);
